@@ -11,15 +11,24 @@ class Player(pygame.sprite.Sprite):
         self.screen = screen
         self.game_map = game_map
 
-        self.image = config.player01
+        self.image = config.playerIDLE
+        self.imageLEFT = config.playerLEFT
+        self.imageRIGHT = config.playerRIGHT
+        self.imageUP = config.playerBACK
+        self.imageDOWN = config.playerFRONT
+
+        self.left = False
+        self.right = False
+        self.front = False
+        self.back = False
+        self.walk_count = 0
+
         self.rect = self.image.get_rect()
         self.rect.x = 5 * config.scale
         self.rect.y = 1 * config.scale
 
         self.group = pygame.sprite.Group()
         self.group.add(self)
-
-        self.collision = True
 
     def update_position(self, dy, dx):
 
@@ -34,17 +43,37 @@ class Player(pygame.sprite.Sprite):
         if collision:
             print("player collide")
 
-        else:
-            self.collision = False
-
     def draw(self, screen):
-        self.group.draw(screen)
+        self.play_animation()
 
     def remove_sprite(self):
         self.group.remove()
 
+    def play_animation(self):
+        if self.walk_count + 1 >= config.fps:
+            self.walk_count = 0
 
-class Character_Controller(pygame.sprite.Sprite):
+        if self.left:
+            self.screen.blit(self.imageLEFT[self.walk_count//8], self.rect)
+            self.walk_count += 1
+
+        elif self.right:
+            self.screen.blit(self.imageRIGHT[self.walk_count//8], self.rect)
+            self.walk_count += 1
+
+        elif self.front:
+            self.screen.blit(self.imageDOWN[self.walk_count//8], self.rect)
+            self.walk_count += 1
+
+        elif self.back:
+            self.screen.blit(self.imageUP[self.walk_count//8], self.rect)
+            self.walk_count += 1
+
+        else:
+            self.screen.blit(self.image, self.rect)
+
+
+class CharacterController(pygame.sprite.Sprite):
     def __init__(self, obj_name, x, y, screen, image, game_map):
         pygame.sprite.Sprite.__init__(self)
 
@@ -85,15 +114,15 @@ class Character_Controller(pygame.sprite.Sprite):
         self.group.draw(screen)
 
     def check_collision(self, obstacle, game):
+        # TODO: figure out how to make the characters unable to pass through each other
+        # TODO: character interaction
         collision = pygame.sprite.collide_rect(self, obstacle)
         if collision == 1:
             print("character collide")
             game.game_state = Game_States.play_message
             game.play_message()
 
-
     def text_to_speak(self, surface, message, font, position, color, bg_color=None):
-        # blit onto a surface, blit that surface onto a screen?
 
         message = Text_Controller(surface, message, font, position, color, back_color=bg_color)
         self.message_list.append(message)
@@ -147,3 +176,5 @@ class Character_Controller(pygame.sprite.Sprite):
 
         else:
             self.dy2 = config.scale
+
+        # TODO: Create more ais

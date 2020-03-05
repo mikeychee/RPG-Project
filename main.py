@@ -17,7 +17,6 @@ while game.game_state != Game_States.quit:
 
     if game.game_state == Game_States.running:
         config.clock.tick(config.fps)  # frame rate
-        pygame.time.delay(0)
 
         game.update(config.clock)
         game.manage_ais()
@@ -27,7 +26,6 @@ while game.game_state != Game_States.quit:
 
     elif game.game_state == Game_States.play_message:
             game.play_message()
-            print(game.game_state)
 
     else:
         game.game_state = Game_States.running

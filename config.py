@@ -6,7 +6,7 @@ white = [255, 255, 255]
 
 scale = 40
 
-fps = 60
+fps = 16
 clock = pygame.time.Clock()
 
 screen_height = 480
@@ -27,7 +27,38 @@ water01 = pygame.transform.scale(water01, (scale, scale))
 tree01 = pygame.transform.scale(tree01, (scale, scale))
 NPC01 = pygame.transform.scale(NPC01, (scale, scale))
 NPC02 = pygame.transform.scale(NPC02, (scale, scale))
+
+# TODO: NPC animations
 text_background = pygame.transform.scale(text_background, (screen_width, 180))
 
-player01 = pygame.image.load("textures/player01.png")
-player01 = pygame.transform.scale(player01, (scale, scale))
+playerIDLE = pygame.image.load("textures/player/playerIDLE.png")
+playerIDLE = pygame.transform.scale(playerIDLE, (scale, scale))
+
+playerL1 = pygame.image.load("textures/player/playerL1.png")
+playerL2 = pygame.image.load("textures/player/playerL2.png")
+
+playerR1 = pygame.image.load("textures/player/playerR1.png")
+playerR2 = pygame.image.load("textures/player/playerR2.png")
+
+playerF1 = pygame.image.load("textures/player/playerF1.png")
+playerF2 = pygame.image.load("textures/player/playerF2.png")
+
+playerB1 = pygame.image.load("textures/player/playerB1.png")
+playerB2 = pygame.image.load("textures/player/playerB2.png")
+
+playerL1 = pygame.transform.scale(playerL1, (scale, scale))
+playerL2 = pygame.transform.scale(playerL2, (scale, scale))
+
+playerR1 = pygame.transform.scale(playerR1, (scale, scale))
+playerR2 = pygame.transform.scale(playerR2, (scale, scale))
+
+playerF1 = pygame.transform.scale(playerF1, (scale, scale))
+playerF2 = pygame.transform.scale(playerF2, (scale, scale))
+
+playerB1 = pygame.transform.scale(playerB1, (scale, scale))
+playerB2 = pygame.transform.scale(playerB2, (scale, scale))
+
+playerLEFT = [playerL1, playerL2]
+playerRIGHT = [playerR1, playerR2]
+playerFRONT = [playerF1, playerF2]
+playerBACK = [playerB1, playerB2]

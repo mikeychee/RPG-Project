@@ -1,11 +1,12 @@
 import time
 
 import pygame
-from characters import Player, Character_Controller
+from characters import Player, CharacterController
 from game_states import Game_States
 from tile import Map_Tile, Obstacles
 from text import Text_Controller
 import config
+#TODO: MAKE THE ACTUAL GAME LOL
 
 
 class Game:
@@ -35,19 +36,19 @@ class Game:
         self.player = Player(self.screen, self.game_map)  # initialise player
 
         # initialise first tester npc
-        self.tester_npc = Character_Controller("NPC1", 7, 8, self.screen, config.NPC01, self.game_map)
+        self.tester_npc = CharacterController("NPC1", 7, 8, self.screen, config.NPC01, self.game_map)
         self.message1 = self.tester_npc.text_to_speak(self.screen, "Hi there! How are you doing?",
                                                       config.game_messages,
                                                       (1 * config.scale, 9 * config.scale),
                                                       config.black)
         self.message2 = self.tester_npc.text_to_speak(self.screen, "I like you very much!", config.game_messages,
-                                                      (5 * config.scale, 9 * config.scale),
+                                                      (1 * config.scale, 9 * config.scale),
                                                       config.black)
 
         # TODO: find out a better way to do this
 
         # sets the tree objects
-        self.tester_npc2 = Character_Controller("NPC2", 3, 3, self.screen, config.NPC02, self.game_map)
+        self.tester_npc2 = CharacterController("NPC2", 3, 3, self.screen, config.NPC02, self.game_map)
 
         self.treesXb = [Obstacles(config.tree01, x, 11, self.player.group)
                         for x in range(self.grid_index_X)]
@@ -80,7 +81,6 @@ class Game:
         self.characters.append(self.tester_npc)
         self.characters.append(self.tester_npc2)
 
-
         # TODO: find out a better way to do this
 
         for tree_list in self.trees:
@@ -95,7 +95,6 @@ class Game:
         pygame.display.flip()  # update screen
 
     def update(self, clock):
-        #print("update")
 
         self.game_messages = [self.message1, self.message2]
 
@@ -133,15 +132,42 @@ class Game:
                 if event.key == pygame.K_ESCAPE:
                     self.game_state = Game_States.quit
 
-                if event.key == pygame.K_a:
+                elif event.key == pygame.K_a:  # left
                     self.player.update_position(0, -1)
-                if event.key == pygame.K_d:
+                    self.player.left = True
+                    self.player.right = False
+                    self.player.front = False
+                    self.player.back = False
+
+                elif event.key == pygame.K_d:  # right
                     self.player.update_position(0, 1)
-                if event.key == pygame.K_w:
+                    self.player.left = False
+                    self.player.right = True
+                    self.player.front = False
+                    self.player.back = False
+
+                elif event.key == pygame.K_w:  # up
                     self.player.update_position(-1, 0)
-                if event.key == pygame.K_s:
+                    self.player.front = False
+                    self.player.back = True
+                    self.player.left = False
+                    self.player.right = False
+
+                elif event.key == pygame.K_s:  # down
                     self.player.update_position(1, 0)
-                if event.key == pygame.K_p:
+                    self.player.front = True
+                    self.player.back = False
+                    self.player.left = False
+                    self.player.right = False
+
+                else:
+                    self.player.left = False
+                    self.player.right = False
+                    self.player.back = False
+                    self.player.front = False
+                    self.player.walk_count = 0
+
+                if event.key == pygame.K_p:  # pause
                     self.pause_game()
 
     def render_map(self, drawn_map):
@@ -175,14 +201,13 @@ class Game:
     def play_message(self):
         count = 0
         done = False
-        collide = True
-        while not done:
 
-            self.text_background.blit(config.text_background, (0, 0))
-            self.screen.blit(self.text_background, (0, 300))
-            self.game_messages[0].draw_text()
-            print("first time")
-            pygame.display.flip()
+        self.text_background.blit(config.text_background, (0, 0))
+        self.screen.blit(self.text_background, (0, 300))
+        self.game_messages[0].draw_text()
+        pygame.display.flip()
+
+        while not done:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
@@ -192,17 +217,11 @@ class Game:
                         count += 1
 
                         for t in range(len(self.game_messages)):
-                            print("second time")
-                            self.screen.blit(self.text_background, (0,300))
-                            self.game_messages[t-1].draw_text()
+                            self.screen.blit(self.text_background, (0, 300))
+                            self.game_messages[t].draw_text()
 
                             pygame.display.flip()
 
                             if count == len(self.game_messages):
                                 self.game_state = Game_States.running
                                 done = True
-
-
-
-                    # TODO: figure out how to display it 1 by 1
-                    # TODO: figure out how to make the collide before the overlap
