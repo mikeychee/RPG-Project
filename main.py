@@ -7,7 +7,7 @@ import config
 pygame.init()
 
 screen = pygame.display.set_mode((config.screen_width, config.screen_height))
-pygame.display.set_caption("Attempt at RPG")
+pygame.display.set_caption("RPG!")
 
 game = Game(screen)
 game.set_up()
