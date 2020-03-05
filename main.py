@@ -13,9 +13,22 @@ game = Game(screen)
 game.set_up()
 
 
-while game.game_state == Game_States.running:
-    config.clock.tick(config.fps)  # frame rate
-    #pygame.time.delay(100)
+while game.game_state != Game_States.quit:
 
-    game.update(config.clock)
-    game.manage_ais()
+    if game.game_state == Game_States.running:
+        config.clock.tick(config.fps)  # frame rate
+        pygame.time.delay(0)
+
+        game.update(config.clock)
+        game.manage_ais()
+
+    elif game.game_state == Game_States.pause:
+        game.pause_game()
+
+    elif game.game_state == Game_States.play_message:
+            game.play_message()
+            print(game.game_state)
+
+    else:
+        game.game_state = Game_States.running
+
