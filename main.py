@@ -12,14 +12,14 @@ pygame.display.set_caption("RPG!")
 game = Game(screen)
 game.set_up()
 
-
 while game.game_state != Game_States.quit:
 
     if game.game_state == Game_States.running:
         config.clock.tick(config.fps)  # frame rate
+        pygame.time.delay(50)
 
         game.update(config.clock)
-        game.manage_ais()
+        # game.manage_ais()
 
     elif game.game_state == Game_States.pause:
         game.pause_game()

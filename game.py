@@ -1,10 +1,11 @@
 import time
-
+import random
 import pygame
 from characters import Player, CharacterController
 from game_states import Game_States
-from tile import Map_Tile, Obstacles
+from tile import Map_Tile, Obstacles, Non_Obstacle_Tiles
 from text import Text_Controller
+import creature
 import config
 #TODO: MAKE THE ACTUAL GAME LOL
 
@@ -36,7 +37,9 @@ class Game:
         self.player = Player(self.screen, self.game_map)  # initialise player
 
         # initialise first tester npc
-        self.tester_npc = CharacterController("NPC1", 7, 8, self.screen, config.NPC01, self.game_map)
+        self.tester_npc = CharacterController("NPC1", 7, 8, self.screen, config.NPC01IDLE, self.game_map,
+                                              config.NPC01LEFT, config.NPC01RIGHT, config.NPC01BACK,
+                                              config.NPC01FRONT, config.NPC01IDLE)
         self.message1 = self.tester_npc.text_to_speak(self.screen, "Hi there! How are you doing?",
                                                       config.game_messages,
                                                       (1 * config.scale, 9 * config.scale),
@@ -45,10 +48,19 @@ class Game:
                                                       (1 * config.scale, 9 * config.scale),
                                                       config.black)
 
+        self.my_creatures = [creature.charmander]
+
+        # initialise the route creatures
+
+        self.route1 = [creature.bulbasaur, creature.squirtle]
+
+
+
+
         # TODO: find out a better way to do this
 
         # sets the tree objects
-        self.tester_npc2 = CharacterController("NPC2", 3, 3, self.screen, config.NPC02, self.game_map)
+        #self.tester_npc2 = CharacterController("NPC2", 3, 3, self.screen, config.NPC02, self.game_map)
 
         self.treesXb = [Obstacles(config.tree01, x, 11, self.player.group)
                         for x in range(self.grid_index_X)]
@@ -59,6 +71,9 @@ class Game:
                         for y in range(self.grid_index_Y)]
         self.treesYr = [Obstacles(config.tree01, self.grid_index_X, y, self.player.group)
                         for y in range(self.grid_index_Y)]
+
+        self.tall_grass = [[Non_Obstacle_Tiles(config.tallgrass01, x, y, self.player.group)
+                           for x in range(9, self.grid_index_X)] for y in range(1, 4)]
 
         self.trees = [self.treesXb, self.treesXt, self.treesYl, self.treesYr]
 
@@ -75,11 +90,11 @@ class Game:
         print("setting up")
         self.game_state = Game_States.running
 
-        self.objects.append(self.tester_npc)
-        self.objects.append(self.tester_npc2)
+        #self.objects.append(self.tester_npc)
+        #self.objects.append(self.tester_npc2)
 
         self.characters.append(self.tester_npc)
-        self.characters.append(self.tester_npc2)
+        #self.characters.append(self.tester_npc2)
 
         # TODO: find out a better way to do this
 
@@ -88,6 +103,10 @@ class Game:
                 self.objects.append(tree)
 
         self.objects.append(self.player)  # adds player to object list
+
+        for tallgrass in self.tall_grass:
+            for i in tallgrass:
+                self.objects.append(i)
 
         self.render_map(self.game_map)
         self.screen.blit(self.main_map, (0, 0))
@@ -104,6 +123,7 @@ class Game:
         self.screen.blit(self.main_map, (0, 0))
         self.render_blocked_tiles(self.game_map)
         self.manage_events()
+        self.manage_ais()
 
         for obj in self.objects:  # draws all objects into the screen
             obj.image.convert()
@@ -111,6 +131,7 @@ class Game:
             fps_count.draw_text()
 
         self.player.rect.topleft = self.player.rect.x, self.player.rect.y  # updates player's rect
+        self.tester_npc.rect.topleft = self.tester_npc.rect.x, self.tester_npc.rect.y
 
         for character in self.characters:
             self.player.check_collision(character.group)
@@ -120,7 +141,8 @@ class Game:
 
     def manage_ais(self):
         self.tester_npc.ai_left_right()
-        self.tester_npc2.ai_up_down()
+        self.tester_npc.play_animation()
+        #self.tester_npc2.ai_up_down()
 
     def manage_events(self):
         for event in pygame.event.get():
@@ -159,6 +181,9 @@ class Game:
                     self.player.back = False
                     self.player.left = False
                     self.player.right = False
+
+                elif event.key == pygame.K_o:
+                    self.game_mechanics()
 
                 else:
                     self.player.left = False
@@ -225,3 +250,31 @@ class Game:
                             if count == len(self.game_messages):
                                 self.game_state = Game_States.running
                                 done = True
+
+    def game_mechanics(self):
+        ended = False
+        current_creature = self.my_creatures[0]
+
+        while not ended:
+            print(
+                "A wild " + self.route1[random.randint(0, len(self.route1) - 1)].name + " appeared!"
+            )
+
+            print(
+                "You chose " + current_creature.name + "!"
+            )
+
+            call = input("What would you like to do? [Run/Fight] > ")
+
+            if call == 'fight':
+                print(current_creature.move_set)
+
+                move = input("What move would you ike to choose? > ")
+
+                if move == current_creature.move_list[0]:
+                    print(current_creature.name + " used " + current_creature.move_list[0])
+
+
+            ended = True
+
+

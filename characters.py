@@ -74,7 +74,8 @@ class Player(pygame.sprite.Sprite):
 
 
 class CharacterController(pygame.sprite.Sprite):
-    def __init__(self, obj_name, x, y, screen, image, game_map):
+    def __init__(self, obj_name, x, y, screen, image, game_map,
+                 left, right, up, down, idle):
         pygame.sprite.Sprite.__init__(self)
 
         # TODO: figure out how to make characters not ghosts
@@ -106,12 +107,48 @@ class CharacterController(pygame.sprite.Sprite):
 
         self.message_list = []
 
+        self.left = False
+        self.right = False
+        self.up = False
+        self.down = False
+        self.walk_count = 0
+
+        self.imageLEFT = right
+        self.imageRIGHT = left
+        self.imageUP = up
+        self.imageDOWN = down
+
     def remove_sprite(self):
         self.remove()
 
     def draw(self, screen):
 
         self.group.draw(screen)
+
+    def play_animation(self):
+            if self.walk_count + 1 >= config.fps:
+                self.walk_count = 0
+
+            if self.left:
+                self.screen.blit(self.imageLEFT[self.walk_count // 8], self.rect)
+                self.walk_count += 1
+
+            elif self.right:
+                self.screen.blit(self.imageRIGHT[self.walk_count // 8], self.rect)
+                self.walk_count += 1
+
+            elif self.down:
+                self.screen.blit(self.imageDOWN[self.walk_count // 8], self.rect)
+                self.walk_count += 1
+
+            elif self.up:
+                self.screen.blit(self.imageUP[self.walk_count // 8], self.rect)
+                self.walk_count += 1
+
+            else:
+                self.screen.blit(self.image, self.rect)
+
+            pygame.display.flip()
 
     def check_collision(self, obstacle, game):
         # TODO: figure out how to make the characters unable to pass through each other
@@ -142,13 +179,17 @@ class CharacterController(pygame.sprite.Sprite):
 
         elif self.movement_counter < 5 and self.dx1 == config.scale:
             # ai starts here!
-            self.rect.x = (self.rect.x + self.dx1)  # moves the character to the right
+            self.rect.x = (self.rect.x + self.dx1)  # moves the character to the left
             self.rect.y = (self.rect.y + self.dy1)
+            self.right = False
+            self.left = True
             self.movement_counter = self.movement_counter + 1  # adds one to the movement checker
 
         elif self.dx1 == config.scale:
             self.dx1 = -config.scale
-            # if the movement counter reaches, to set the direction in the opposite to make him move left
+            self.left = False
+            self.right = True
+            # if the movement counter reaches, to set the direction in the opposite to make him move right
 
         else:
             self.dx1 = config.scale

@@ -16,9 +16,6 @@ class Obstacles(pygame.sprite.Sprite):
         self.player = player
         self.rect.x = x * config.scale
         self.rect.y = y * config.scale
-        self.check_collision = False
-
-        self.rect.topleft = self.rect.x, self.rect.y
 
         self.groupObs = pygame.sprite.Group()
         self.groupObs.add(self)
@@ -26,9 +23,25 @@ class Obstacles(pygame.sprite.Sprite):
 
     def check_collide(self):
         collision = pygame.sprite.groupcollide(self.player, self.groupObs, False, False)
-        if collision:
-            self.check_collision = True
 
     def draw(self, screen):
         self.groupObs.draw(screen)
-        self.rect.topleft = self.rect.x, self.rect.y
+
+
+class Non_Obstacle_Tiles(pygame.sprite.Sprite):
+    def __init__(self, image, x, y, player):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = image
+        self.player = player
+        self.rect = self.image.get_rect()
+        self.rect.x = x * config.scale
+        self.rect.y = y * config.scale
+
+        self.groupNObs = pygame.sprite.Group()
+        self.groupNObs.add(self)
+
+    def draw(self, screen):
+        self.groupNObs.draw(screen)
+
+
+
