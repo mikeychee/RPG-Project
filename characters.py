@@ -27,6 +27,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = 5 * config.scale
         self.rect.y = 1 * config.scale
 
+        self.position = (self.rect.x, self.rect.y)
+
         self.group = pygame.sprite.Group()
         self.group.add(self)
 

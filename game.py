@@ -72,7 +72,7 @@ class Game:
         self.treesYr = [Obstacles(config.tree01, self.grid_index_X, y, self.player.group)
                         for y in range(self.grid_index_Y)]
 
-        self.tall_grass = [[Non_Obstacle_Tiles(config.tallgrass01, x, y, self.player.group)
+        self.tall_grass = [[Non_Obstacle_Tiles(config.tallgrass01, x, y, self.player)
                            for x in range(9, self.grid_index_X)] for y in range(1, 4)]
 
         self.trees = [self.treesXb, self.treesXt, self.treesYl, self.treesYr]
@@ -137,6 +137,10 @@ class Game:
             self.player.check_collision(character.group)
             character.check_collision(self.player, self)  # the one that identifies it
 
+        for grass in self.tall_grass:
+            for i in grass:
+                i.check_collide(self)
+
         pygame.display.flip()
 
     def manage_ais(self):
@@ -145,6 +149,8 @@ class Game:
         #self.tester_npc2.ai_up_down()
 
     def manage_events(self):
+        rdm_pos = self.random_grass()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.game_state = Game_States.quit
@@ -182,8 +188,10 @@ class Game:
                     self.player.left = False
                     self.player.right = False
 
-                elif event.key == pygame.K_o:
-                    self.game_mechanics()
+                elif self.player.position == rdm_pos:
+                    print(rdm_pos)
+                    print("yes")
+
 
                 else:
                     self.player.left = False
@@ -251,30 +259,113 @@ class Game:
                                 self.game_state = Game_States.running
                                 done = True
 
+    def random_grass(self):
+        random_list = []
+        for tallgrass in self.tall_grass:
+            for i in tallgrass:
+                position = i.get_position()
+
+                random_list.append((position))
+        return random_list[random.randint(0, len(random_list)-1)]
+
+
+
     def game_mechanics(self):
         ended = False
         current_creature = self.my_creatures[0]
+        random_creature = self.route1[random.randint(0, len(self.route1) - 1)]
 
         while not ended:
+            alive = True
             print(
-                "A wild " + self.route1[random.randint(0, len(self.route1) - 1)].name + " appeared!"
+                "A wild " + random_creature.name + " appeared!"
             )
 
             print(
                 "You chose " + current_creature.name + "!"
             )
 
-            call = input("What would you like to do? [Run/Fight] > ")
+            while alive:
 
-            if call == 'fight':
-                print(current_creature.move_set)
+                call = input("What would you like to do? [Run/Fight] > ")
 
-                move = input("What move would you ike to choose? > ")
+                if call == 'fight':
+                    print(current_creature.move_set)
 
-                if move == current_creature.move_list[0]:
-                    print(current_creature.name + " used " + current_creature.move_list[0])
+                    move = input("What move would you like to choose? > ")
 
+                    if move == current_creature.move_list[0]:
+                        print(current_creature.name + " used " + current_creature.move_list[0])
 
-            ended = True
+                        random_creature.take_dmg(current_creature.move_set[current_creature.move_list[0]][0])
+
+                        print(random_creature.name + " took " +
+                              str(current_creature.move_set[current_creature.move_list[0]][0]) +
+                              " damage!")
+
+                        print(" ")
+
+                        if random_creature.hp >= 0:
+                            print(random_creature.name + " has " + str(random_creature.hp) + " hp left!")
+
+                    elif move == current_creature.move_list[1]:
+                        print(current_creature.name + " used " + current_creature.move_list[1])
+
+                        random_creature.take_dmg(current_creature.move_set[current_creature.move_list[1]][0])
+
+                        print(random_creature.name + " took " +
+                              str(current_creature.move_set[current_creature.move_list[1]][0]) +
+                              " damage!")
+
+                        print(" ")
+
+                        if random_creature.hp >= 0:
+
+                            print(random_creature.name + " has " + str(random_creature.hp) + " hp left!")
+
+                    elif move == current_creature.move_list[2]:
+                        print(current_creature.name + " used " + current_creature.move_list[2])
+
+                        random_creature.take_dmg(current_creature.move_set[current_creature.move_list[2]][0])
+
+                        print(random_creature.name + " took " +
+                              str(current_creature.move_set[current_creature.move_list[2]][0]) +
+                              " damage!")
+
+                        print(" ")
+                        if random_creature.hp >= 0:
+
+                            print(random_creature.name + " has " + str(random_creature.hp) + " hp left!")
+
+                    elif move == current_creature.move_list[3]:
+                        print(current_creature.name + " used " + current_creature.move_list[3])
+
+                        random_creature.take_dmg(current_creature.move_set[current_creature.move_list[3]][0])
+
+                        print(random_creature.name + " took " +
+                              str(current_creature.move_set[current_creature.move_list[3]][0]) +
+                              " damage!")
+
+                        print(" ")
+                        if random_creature.hp >= 0:
+
+                            print(random_creature.name + " has " + str(random_creature.hp) + " hp left!")
+
+                    elif move not in current_creature.move_list:
+                        print("Please pick a move")
+
+                    if random_creature.hp <= 0:
+                        print("The wild " + random_creature.name + " fainted!")
+                        alive = False
+                        ended = True
+
+                elif call == "run":
+                    randomint = random.randint(1,3)
+                    if randomint == 1:
+                        print("Got away safely!")
+                        ended = True
+                        alive = False
+                    elif randomint != 1:
+                        print("Couldn't get away!")
 
 

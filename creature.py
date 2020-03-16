@@ -9,7 +9,6 @@ class Creature:
         self.move_set = {}
         self.move_list = []
 
-
         self.stats = {'attack': base_attack, 'defence': base_defend, 'speed': base_speed}
         self.properties = {'name': name, 'type': type, 'hp': hp, 'moves': self.move_set, 'stats': self.stats}
 
@@ -31,6 +30,9 @@ class Creature:
     def get_move(self, index):
         return self.move_list
 
+    def take_dmg(self, power):
+        self.hp -= power
+
 
 class Wild_Creature(Creature):
     def __init__(self, name, type, hp, base_attack, base_defend, base_speed):
@@ -45,6 +47,9 @@ squirtle.set_moves('Tackle', 40, 'Normal')
 
 charmander = Creature('Charmander', 'Fire', 39, 52, 43, 65)
 charmander.set_moves('Scratch', 40, 'Normal')
+charmander.set_moves('Ember', 40, 'Fire')
+charmander.set_moves('Flamethrower', 90, 'Fire')
+charmander.set_moves('Bite', 60, 'Dark')
 
 bulbasaur = Creature('Bulbasaur', 'Grass', 45, 49, 49, 45)
 bulbasaur.set_moves('Tackle', 40, 'Normal')
