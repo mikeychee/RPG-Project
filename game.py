@@ -297,11 +297,11 @@ class Game:
                     if move == current_creature.move_list[0]:
                         print(current_creature.name + " used " + current_creature.move_list[0])
 
-                        random_creature.take_dmg(current_creature.move_set[current_creature.move_list[0]][0])
+                        dmg = random_creature.take_dmg(current_creature.move_set[current_creature.move_list[0]][0],
+                                                       current_creature.move_set[current_creature.move_list[0]][1],
+                                                       random_creature.type)
 
-                        print(random_creature.name + " took " +
-                              str(current_creature.move_set[current_creature.move_list[0]][0]) +
-                              " damage!")
+                        print(random_creature.name + " took " + str(dmg) + " damage!")
 
                         print(" ")
 
@@ -311,11 +311,11 @@ class Game:
                     elif move == current_creature.move_list[1]:
                         print(current_creature.name + " used " + current_creature.move_list[1])
 
-                        random_creature.take_dmg(current_creature.move_set[current_creature.move_list[1]][0])
+                        dmg = random_creature.take_dmg(current_creature.move_set[current_creature.move_list[1]][0],
+                                                       current_creature.move_set[current_creature.move_list[1]][1],
+                                                       random_creature.type)
 
-                        print(random_creature.name + " took " +
-                              str(current_creature.move_set[current_creature.move_list[1]][0]) +
-                              " damage!")
+                        print(random_creature.name + " took " + str(dmg) + " damage!")
 
                         print(" ")
 
@@ -326,11 +326,11 @@ class Game:
                     elif move == current_creature.move_list[2]:
                         print(current_creature.name + " used " + current_creature.move_list[2])
 
-                        random_creature.take_dmg(current_creature.move_set[current_creature.move_list[2]][0])
+                        dmg = random_creature.take_dmg(current_creature.move_set[current_creature.move_list[2]][0],
+                                                       current_creature.move_set[current_creature.move_list[2]][1],
+                                                       random_creature.type)
 
-                        print(random_creature.name + " took " +
-                              str(current_creature.move_set[current_creature.move_list[2]][0]) +
-                              " damage!")
+                        print(random_creature.name + " took " + str(dmg) + " damage!")
 
                         print(" ")
                         if random_creature.hp >= 0:
@@ -340,11 +340,11 @@ class Game:
                     elif move == current_creature.move_list[3]:
                         print(current_creature.name + " used " + current_creature.move_list[3])
 
-                        random_creature.take_dmg(current_creature.move_set[current_creature.move_list[3]][0])
+                        dmg = random_creature.take_dmg(current_creature.move_set[current_creature.move_list[3]][0],
+                                                       current_creature.move_set[current_creature.move_list[3]][1],
+                                                       random_creature.type)
 
-                        print(random_creature.name + " took " +
-                              str(current_creature.move_set[current_creature.move_list[3]][0]) +
-                              " damage!")
+                        print(random_creature.name + " took " + str(dmg) + " damage!")
 
                         print(" ")
                         if random_creature.hp >= 0:

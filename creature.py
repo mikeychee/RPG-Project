@@ -11,6 +11,8 @@ class Creature:
 
         self.stats = {'attack': base_attack, 'defence': base_defend, 'speed': base_speed}
         self.properties = {'name': name, 'type': type, 'hp': hp, 'moves': self.move_set, 'stats': self.stats}
+        self.super_effective_charts = {'Water' : 'Fire', 'Fire' : 'Grass', 'Grass' : 'Water', 'Normal': '',
+                                       'Dark': 'Psychic'}
 
     def set_moves(self, move, power, move_type):
         self.move_set[move] = (power, move_type)
@@ -28,10 +30,19 @@ class Creature:
         self.properties['hp'] = self.hp
 
     def get_move(self, index):
-        return self.move_list
+        return self.move_list[index]
 
-    def take_dmg(self, power):
-        self.hp -= power
+    def take_dmg(self, power, type, type2):
+        dmg_dealt = int((power * self.stats['attack']) ** (1/3))
+
+        if type2 == self.super_effective_charts[type]:
+            print("It's super effective!")
+            dmg_dealt = dmg_dealt * 2
+            self.hp -= dmg_dealt
+        else:
+            self.hp -= dmg_dealt
+
+        return dmg_dealt
 
 
 class Wild_Creature(Creature):
@@ -48,8 +59,9 @@ squirtle.set_moves('Tackle', 40, 'Normal')
 charmander = Creature('Charmander', 'Fire', 39, 52, 43, 65)
 charmander.set_moves('Scratch', 40, 'Normal')
 charmander.set_moves('Ember', 40, 'Fire')
-charmander.set_moves('Flamethrower', 90, 'Fire')
+charmander.set_moves('Vine Whip', 40, 'Fire')
 charmander.set_moves('Bite', 60, 'Dark')
 
 bulbasaur = Creature('Bulbasaur', 'Grass', 45, 49, 49, 45)
 bulbasaur.set_moves('Tackle', 40, 'Normal')
+
