@@ -11,13 +11,24 @@ class Creature:
 
         self.stats = {'attack': base_attack, 'defence': base_defend, 'speed': base_speed}
         self.properties = {'name': name, 'type': type, 'hp': hp, 'moves': self.move_set, 'stats': self.stats}
-        self.super_effective_charts = {'Water' : 'Fire', 'Fire' : 'Grass', 'Grass' : 'Water', 'Normal': '',
+        self.super_effective_charts = {'Water': 'Fire',
+                                       'Fire': 'Grass',
+                                       'Grass': 'Water',
+                                       'Normal': '',
                                        'Dark': 'Psychic'}
+        self.not_effective_charts = {'Fire': 'Water',
+                                     'Water': 'Grass',
+                                     'Grass': 'Fire',}
+
+        self.same_type_charts = {'Fire': 'Fire',
+                                 'Grass': 'Grass',
+                                 'Water': 'Water',
+                                 'Psychic': 'Psychic',
+                                 'Dark': 'Dark'}
 
     def set_moves(self, move, power, move_type):
         self.move_set[move] = (power, move_type)
         self.move_list.append(move)
-
 
     def set_stats(self, d_attack, d_defend, d_speed):
         self.stats['attack'] += d_attack
@@ -32,17 +43,23 @@ class Creature:
     def get_move(self, index):
         return self.move_list[index]
 
-    def take_dmg(self, power, type, type2):
+    def take_dmg(self, power, type, creature_type):
         dmg_dealt = int((power * self.stats['attack']) ** (1/3))
 
-        if type2 == self.super_effective_charts[type]:
+        if creature_type == self.super_effective_charts[type]:
             print("It's super effective!")
             dmg_dealt = dmg_dealt * 2
-            self.hp -= dmg_dealt
+            self.hp -= int(dmg_dealt)
+
+        elif creature_type == self.not_effective_charts[type] or creature_type == self.same_type_charts[type]:
+            print("Not very effective...")
+            dmg_dealt = dmg_dealt / 2
+            self.hp -= int(dmg_dealt)
+
         else:
             self.hp -= dmg_dealt
 
-        return dmg_dealt
+        return int(dmg_dealt)
 
 
 class Wild_Creature(Creature):
@@ -59,8 +76,8 @@ squirtle.set_moves('Tackle', 40, 'Normal')
 charmander = Creature('Charmander', 'Fire', 39, 52, 43, 65)
 charmander.set_moves('Scratch', 40, 'Normal')
 charmander.set_moves('Ember', 40, 'Fire')
-charmander.set_moves('Vine Whip', 40, 'Fire')
-charmander.set_moves('Bite', 60, 'Dark')
+charmander.set_moves('Vine Whip', 40, 'Grass')
+charmander.set_moves('Water Gun', 40, 'Water')
 
 bulbasaur = Creature('Bulbasaur', 'Grass', 45, 49, 49, 45)
 bulbasaur.set_moves('Tackle', 40, 'Normal')

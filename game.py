@@ -268,8 +268,6 @@ class Game:
                 random_list.append((position))
         return random_list[random.randint(0, len(random_list)-1)]
 
-
-
     def game_mechanics(self):
         ended = False
         current_creature = self.my_creatures[0]
@@ -360,12 +358,13 @@ class Game:
                         ended = True
 
                 elif call == "run":
-                    randomint = random.randint(1,3)
-                    if randomint == 1:
+                    random_int = random.randint(1, 3)
+                    if random_int == 1:
                         print("Got away safely!")
                         ended = True
                         alive = False
-                    elif randomint != 1:
+                    elif random_int != 1:
                         print("Couldn't get away!")
+
 
 
