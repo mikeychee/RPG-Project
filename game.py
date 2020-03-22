@@ -5,6 +5,7 @@ from characters import Player, CharacterController
 from game_states import Game_States
 from tile import Map_Tile, Obstacles, Non_Obstacle_Tiles
 from text import Text_Controller
+from scenes import Scene
 import creature
 import config
 #TODO: MAKE THE ACTUAL GAME LOL
@@ -19,6 +20,7 @@ class Game:
         self.map = []
         self.characters = []
         self.text_background = pygame.Surface((config.screen_width, 180))
+        self.scene_surface = pygame.Surface((config.screen_width, config.screen_height))
         self.message_count = 0
 
         self.grid_index_X = int(config.screen_width / config.scale) - 1
@@ -86,6 +88,10 @@ class Game:
             self.game_map[0][y].blocked = True
             self.game_map[self.grid_index_X][y].blocked = True
 
+        # scene mechanics
+        self.scene = Scene(self.scene_surface)
+        self.scene.set_background(config.battle_background, self.scene_surface)
+
     def set_up(self):
         print("setting up")
         self.game_state = Game_States.running
@@ -133,13 +139,15 @@ class Game:
         self.player.rect.topleft = self.player.rect.x, self.player.rect.y  # updates player's rect
         self.tester_npc.rect.topleft = self.tester_npc.rect.x, self.tester_npc.rect.y
 
-        for character in self.characters:
-            self.player.check_collision(character.group)
-            character.check_collision(self.player, self)  # the one that identifies it
 
         for grass in self.tall_grass:
             for i in grass:
                 i.check_collide(self)
+
+
+        for character in self.characters:
+            self.player.check_collision(character.group)
+            character.check_collision(self.player, self)  # the one that identifies it
 
         pygame.display.flip()
 
@@ -192,7 +200,6 @@ class Game:
                     print(rdm_pos)
                     print("yes")
 
-
                 else:
                     self.player.left = False
                     self.player.right = False
@@ -202,6 +209,9 @@ class Game:
 
                 if event.key == pygame.K_p:  # pause
                     self.pause_game()
+
+                if event.key == pygame.K_o:
+                    self.screen.blit(self.scene_surface, (0, 0))
 
     def render_map(self, drawn_map):
 
@@ -269,12 +279,19 @@ class Game:
         return random_list[random.randint(0, len(random_list)-1)]
 
     def game_mechanics(self):
+        self.screen.blit(self.scene_surface, (0, 0))
+        pygame.display.flip()
+
+        print("display!")
+
+
         ended = False
         current_creature = self.my_creatures[0]
         random_creature = self.route1[random.randint(0, len(self.route1) - 1)]
 
         while not ended:
             alive = True
+
             print(
                 "A wild " + random_creature.name + " appeared!"
             )

@@ -21,6 +21,7 @@ water01 = pygame.image.load("textures/water02.png")
 tree01 = pygame.image.load("textures/tree01.png")
 NPC02 = pygame.image.load("textures/NPC02.png")
 text_background = pygame.image.load("textures/Text Background.png")
+battle_background = pygame.image.load("textures/Battlebackground_grass.png")
 
 grass01 = pygame.transform.scale(grass01, (scale, scale))
 tallgrass01 = pygame.transform.scale(tallgrass01, (scale, scale))
