@@ -139,11 +139,9 @@ class Game:
         self.player.rect.topleft = self.player.rect.x, self.player.rect.y  # updates player's rect
         self.tester_npc.rect.topleft = self.tester_npc.rect.x, self.tester_npc.rect.y
 
-
         for grass in self.tall_grass:
             for i in grass:
                 i.check_collide(self)
-
 
         for character in self.characters:
             self.player.check_collision(character.group)
@@ -230,6 +228,8 @@ class Game:
 
     def pause_game(self):
         self.game_state = Game_States.pause
+        self.screen.blit(self.scene_surface, (0,0))
+        pygame.display.flip()
 
         for event in pygame.event.get():  # pause sequence
             if event.type == pygame.QUIT:
@@ -279,10 +279,12 @@ class Game:
         return random_list[random.randint(0, len(random_list)-1)]
 
     def game_mechanics(self):
+        input()
         self.screen.blit(self.scene_surface, (0, 0))
         pygame.display.flip()
-
+        input()
         print("display!")
+
 
 
         ended = False
