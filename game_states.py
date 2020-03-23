@@ -7,3 +7,4 @@ class Game_States(Enum):
     none = 0
     pause = 3
     play_message = 4
+    play_scene = 5

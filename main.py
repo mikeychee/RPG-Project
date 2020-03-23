@@ -25,7 +25,10 @@ while game.game_state != Game_States.quit:
         game.pause_game()
 
     elif game.game_state == Game_States.play_message:
-            game.play_message()
+        game.play_message()
+
+    elif game.game_state == Game_States.play_scene:
+        game.play_scene()
 
     else:
         game.game_state = Game_States.running

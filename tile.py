@@ -54,7 +54,7 @@ class Non_Obstacle_Tiles(pygame.sprite.Sprite):
 
     def check_collide(self, game):
         # for grass tiles only
-        randomint = random.randint(1, 20)
+        randomint = random.randint(1, 15)
         collision = pygame.sprite.collide_rect(self, self.player)
 
         if collision == 1:

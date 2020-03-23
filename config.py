@@ -14,6 +14,7 @@ screen_width = 640
 
 fps_Counter = pygame.font.Font("fonts/proxima_nova.ttf", 20)
 game_messages = pygame.font.Font("fonts/Connection.otf", 30)
+game_messages_small = pygame.font.Font("fonts/Connection.otf", 20)
 
 grass01 = pygame.image.load("textures/grass01.png")
 tallgrass01 = pygame.image.load("textures/tallgrass01.png")
@@ -22,6 +23,12 @@ tree01 = pygame.image.load("textures/tree01.png")
 NPC02 = pygame.image.load("textures/NPC02.png")
 text_background = pygame.image.load("textures/Text Background.png")
 battle_background = pygame.image.load("textures/Battlebackground_grass.png")
+
+fight_button = pygame.image.load("textures/fight_button.png")
+fight_button_H = pygame.image.load("textures/fight_button hover.png")
+
+run_button = pygame.image.load("textures/run_button.png")
+run_button_H = pygame.image.load("textures/run_button hover.png")
 
 grass01 = pygame.transform.scale(grass01, (scale, scale))
 tallgrass01 = pygame.transform.scale(tallgrass01, (scale, scale))
@@ -97,17 +104,3 @@ NPC01LEFT = [NPC01L1, NPC01L2]
 NPC01RIGHT = [NPC01R1, NPC01R2]
 NPC01FRONT = [NPC01F1, NPC01F2]
 NPC01BACK = [NPC01B1, NPC01B2]
-
-
-
-
-
-
-
-
-
-
-
-
-
-

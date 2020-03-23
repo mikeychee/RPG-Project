@@ -1,10 +1,11 @@
-import time
+from tkinter import messagebox
 import random
 import pygame
 from characters import Player, CharacterController
 from game_states import Game_States
 from tile import Map_Tile, Obstacles, Non_Obstacle_Tiles
 from text import Text_Controller
+from buttons import Button
 from scenes import Scene
 import creature
 import config
@@ -209,8 +210,7 @@ class Game:
                     self.pause_game()
 
                 if event.key == pygame.K_o:
-                    self.screen.blit(self.scene_surface, (0, 0))
-
+                    pass
     def render_map(self, drawn_map):
 
         for x in range(0, config.screen_width):
@@ -241,6 +241,13 @@ class Game:
                 elif event.key == pygame.K_ESCAPE:
                     quit()
 
+    def play_scene(self):
+        self.game_state = Game_States.play_scene
+        self.screen.blit(self.scene_surface, (0, 0))
+        print("displaying scene")
+
+        pygame.display.flip()
+
     def play_message(self):
         count = 0
         done = False
@@ -258,16 +265,17 @@ class Game:
 
                     elif event.key == pygame.K_SPACE:
                         count += 1
+                        print(len(self.game_messages))
 
-                        for t in range(len(self.game_messages)):
+                        if count == len(self.game_messages):
+                            self.game_state = Game_States.running
+                            done = True
+
+                        elif count < len(self.game_messages):
                             self.screen.blit(self.text_background, (0, 300))
-                            self.game_messages[t].draw_text()
+                            self.game_messages[count].draw_text()
 
                             pygame.display.flip()
-
-                            if count == len(self.game_messages):
-                                self.game_state = Game_States.running
-                                done = True
 
     def random_grass(self):
         random_list = []
@@ -278,112 +286,97 @@ class Game:
                 random_list.append((position))
         return random_list[random.randint(0, len(random_list)-1)]
 
+    @staticmethod
+    def button_mechanics(self, button, mouse):
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if button.rect.x < mouse[0] < (
+                        button.rect.x + button.rect[2]):
+                    if button.rect.y < mouse[1] < (
+                            button.rect.y + button.rect[3]):
+                        # add what happens after fight button is clicked here
+                        print("click")
+                        ended = True
+
+            elif event.type == pygame.MOUSEMOTION:
+                if button.rect.x < mouse[0] < (
+                        button.rect.x + button.rect[2]):
+                    if button.rect.y < mouse[1] < (
+                            button.rect.y + button.rect[3]):
+                        # print("hover")
+                        button.image = config.fight_button_H
+                        button.draw()
+
+                    else:
+                        button.image = config.fight_button
+                        button.draw()
+
     def game_mechanics(self):
-        input()
-        self.screen.blit(self.scene_surface, (0, 0))
-        pygame.display.flip()
-        input()
-        print("display!")
-
-
+        print("set up battle scene")
+        # setting up the variables for the game
+        battle_texts = []
 
         ended = False
         current_creature = self.my_creatures[0]
         random_creature = self.route1[random.randint(0, len(self.route1) - 1)]
 
+        starting_text = Text_Controller(self.scene_surface, "A wild " + random_creature.name + " appeared!",
+                                        config.game_messages, (15, 380), config.black)
+        chosen_text = Text_Controller(self.scene_surface, "You chose " + current_creature.name + "!",
+                                      config.game_messages, (15, 380), config.black)
+        call_text = Text_Controller(self.scene_surface, "What would you like to do?", config.game_messages_small,
+                                    (15, 360), config.black)
+        failed_esc = Text_Controller(self.scene_surface, "Couldn't get away!", config.game_messages,
+                                    (15, 360), config.black)
+
+        battle_texts.append(starting_text)
+        battle_texts.append(chosen_text)  # this order is important as it is the order in which the messages
+        battle_texts.append(call_text)  # are played
+
+        fight_button = Button(self.screen, config.fight_button, (150, 400))
+        run_button = Button(self.screen, config.run_button, (350, 400))
+
+
+        battle_texts[0].draw_text()
+        self.play_scene()
+        count = 0
+
+
+        # game code
         while not ended:
+
             alive = True
 
-            print(
-                "A wild " + random_creature.name + " appeared!"
-            )
+            mouse = pygame.mouse.get_pos()
+            for event in pygame.event.get():
 
-            print(
-                "You chose " + current_creature.name + "!"
-            )
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            quit()
 
-            while alive:
+                        elif event.key == pygame.K_SPACE:
+                            count += 1
 
-                call = input("What would you like to do? [Run/Fight] > ")
+                            #if count == len(battle_texts):
+                            #    ended = True
 
-                if call == 'fight':
-                    print(current_creature.move_set)
+                            if count < len(battle_texts):
+                                self.scene.set_background(config.battle_background, self.scene_surface)
 
-                    move = input("What move would you like to choose? > ")
+                                battle_texts[count].draw_text()
+                                self.play_scene()
 
-                    if move == current_creature.move_list[0]:
-                        print(current_creature.name + " used " + current_creature.move_list[0])
-
-                        dmg = random_creature.take_dmg(current_creature.move_set[current_creature.move_list[0]][0],
-                                                       current_creature.move_set[current_creature.move_list[0]][1],
-                                                       random_creature.type)
-
-                        print(random_creature.name + " took " + str(dmg) + " damage!")
-
-                        print(" ")
-
-                        if random_creature.hp >= 0:
-                            print(random_creature.name + " has " + str(random_creature.hp) + " hp left!")
-
-                    elif move == current_creature.move_list[1]:
-                        print(current_creature.name + " used " + current_creature.move_list[1])
-
-                        dmg = random_creature.take_dmg(current_creature.move_set[current_creature.move_list[1]][0],
-                                                       current_creature.move_set[current_creature.move_list[1]][1],
-                                                       random_creature.type)
-
-                        print(random_creature.name + " took " + str(dmg) + " damage!")
-
-                        print(" ")
-
-                        if random_creature.hp >= 0:
-
-                            print(random_creature.name + " has " + str(random_creature.hp) + " hp left!")
-
-                    elif move == current_creature.move_list[2]:
-                        print(current_creature.name + " used " + current_creature.move_list[2])
-
-                        dmg = random_creature.take_dmg(current_creature.move_set[current_creature.move_list[2]][0],
-                                                       current_creature.move_set[current_creature.move_list[2]][1],
-                                                       random_creature.type)
-
-                        print(random_creature.name + " took " + str(dmg) + " damage!")
-
-                        print(" ")
-                        if random_creature.hp >= 0:
-
-                            print(random_creature.name + " has " + str(random_creature.hp) + " hp left!")
-
-                    elif move == current_creature.move_list[3]:
-                        print(current_creature.name + " used " + current_creature.move_list[3])
-
-                        dmg = random_creature.take_dmg(current_creature.move_set[current_creature.move_list[3]][0],
-                                                       current_creature.move_set[current_creature.move_list[3]][1],
-                                                       random_creature.type)
-
-                        print(random_creature.name + " took " + str(dmg) + " damage!")
-
-                        print(" ")
-                        if random_creature.hp >= 0:
-
-                            print(random_creature.name + " has " + str(random_creature.hp) + " hp left!")
-
-                    elif move not in current_creature.move_list:
-                        print("Please pick a move")
-
-                    if random_creature.hp <= 0:
-                        print("The wild " + random_creature.name + " fainted!")
-                        alive = False
-                        ended = True
-
-                elif call == "run":
-                    random_int = random.randint(1, 3)
-                    if random_int == 1:
-                        print("Got away safely!")
-                        ended = True
-                        alive = False
-                    elif random_int != 1:
-                        print("Couldn't get away!")
+                                if count == 2:
+                                    fight_button.draw()
+                                    run_button.draw()
+                                    print("draw buttons")
 
 
+
+
+            pygame.display.flip()
+
+            if ended:
+                self.scene.set_background(config.battle_background, self.scene_surface)
+                self.game_state = Game_States.running
 
