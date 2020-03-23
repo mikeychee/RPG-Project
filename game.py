@@ -1,4 +1,4 @@
-from tkinter import messagebox
+import tkinter
 import random
 import pygame
 from characters import Player, CharacterController
@@ -287,7 +287,7 @@ class Game:
         return random_list[random.randint(0, len(random_list)-1)]
 
     @staticmethod
-    def button_mechanics(self, button, mouse):
+    def button_mechanics(button, mouse):
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if button.rect.x < mouse[0] < (
@@ -341,7 +341,6 @@ class Game:
         self.play_scene()
         count = 0
 
-
         # game code
         while not ended:
 
@@ -351,10 +350,7 @@ class Game:
             for event in pygame.event.get():
 
                     if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_ESCAPE:
-                            quit()
-
-                        elif event.key == pygame.K_SPACE:
+                        if event.key == pygame.K_SPACE:
                             count += 1
 
                             #if count == len(battle_texts):
@@ -370,8 +366,57 @@ class Game:
                                     fight_button.draw()
                                     run_button.draw()
                                     print("draw buttons")
+                    if count == 2:
+                            if event.type == pygame.MOUSEBUTTONDOWN:
+                                if fight_button.rect.x < mouse[0] < (
+                                        fight_button.rect.x + fight_button.rect[2]):
+                                    if fight_button.rect.y < mouse[1] < (
+                                            fight_button.rect.y + fight_button.rect[3]):
+                                        # add what happens after fight button is clicked here
+                                        print("click")
+                                        ended = True
 
+                                if run_button.rect.x < mouse[0] < (
+                                        run_button.rect.x + run_button.rect[2]):
+                                    if run_button.rect.y < mouse[1] < (
+                                            run_button.rect.y + run_button.rect[3]):
+                                        print("click")
+                                        self.scene.set_background(config.battle_background, self.scene_surface)
+                                        failed_esc.draw_text()
+                                        self.play_scene()
+                                        count += 1
 
+                            elif event.type == pygame.MOUSEMOTION:
+                                if fight_button.rect.x < mouse[0] < (
+                                        fight_button.rect.x + fight_button.rect[2]):
+                                    if fight_button.rect.y < mouse[1] < (
+                                            fight_button.rect.y + fight_button.rect[3]):
+                                        # print("hover")
+                                        fight_button.image = config.fight_button_H
+                                        fight_button.draw()
+
+                                    else:
+                                        fight_button.image = config.fight_button
+                                        fight_button.draw()
+
+                                if run_button.rect.x < mouse[0] < (
+                                        run_button.rect.x + run_button.rect[2]):
+                                    if run_button.rect.y < mouse[1] < (
+                                            run_button.rect.y + run_button.rect[3]):
+                                        # print("hover")
+                                        run_button.image = config.run_button_H
+                                        run_button.draw()
+
+                                    else:
+                                        run_button.image = config.run_button
+                                        run_button.draw()
+
+                            elif event.type == pygame.KEYDOWN and count > 2:
+                                if event.key == pygame.K_SPACE:
+                                    ended = True
+
+                                elif event.key == pygame.K_ESCAPE:
+                                    quit()
 
 
             pygame.display.flip()
