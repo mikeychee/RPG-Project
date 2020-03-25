@@ -395,7 +395,7 @@ class Game:
                                       (15, 360), config.black)
 
         fainted_text = Text_Controller(self.scene_surface,
-                                       random_creature.name + " has fainted!", config.game_messages,
+                                       random_creature.name + " fainted!", config.game_messages,
                                        (15, 360), config.black)
 
         super_effective_text = Text_Controller(self.scene_surface,
@@ -462,6 +462,7 @@ class Game:
 
                 if count == 2 and battle_count == 0:
                     selections = [fight_button, run_button]
+                    current_selection = 0
 
                     if event.type == pygame.KEYUP:
 
@@ -487,6 +488,11 @@ class Game:
 
                                 self.scene.set_background(config.battle_background, self.scene_surface)
                                 self.play_scene()
+
+                                move1B.image = config.button_template
+                                move2B.image = config.button_template
+                                move3B.image = config.button_template
+                                move4B.image = config.button_template
 
                                 move1B.draw()
                                 move2B.draw()
@@ -827,17 +833,17 @@ class Game:
                             battle_count += 1
                             print(dmg)
 
+                            if 0 < battle_count < len(battle_texts) and random_creature.hp > 0:
+                                battle_texts[battle_count].draw_text()
+
+                                self.play_scene()
+                                print(random_creature.name + " took " + str(dmg) + " damage!")
+
                             if random_creature.hp <= 0:
                                 fainted_text.draw_text()
                                 self.play_scene()
                                 count = 5
                                 alive = False
-
-                            elif 0 < battle_count < len(battle_texts):
-                                battle_texts[battle_count].draw_text()
-
-                                self.play_scene()
-                                print(random_creature.name + " took " + str(dmg) + " damage!")
 
                             if battle_count >= len(battle_texts)-1:
                                 count = 2
