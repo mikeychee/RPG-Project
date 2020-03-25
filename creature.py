@@ -6,6 +6,7 @@ class Creature:
         self.name = name
         self.type = type
         self.hp = hp
+        self.max_hp = hp
         self.move_set = {}
         self.move_list = []
 
@@ -18,13 +19,15 @@ class Creature:
                                        'Dark': 'Psychic'}
         self.not_effective_charts = {'Fire': 'Water',
                                      'Water': 'Grass',
-                                     'Grass': 'Fire',}
+                                     'Grass': 'Fire',
+                                     'Normal': 'Fighting'}
 
         self.same_type_charts = {'Fire': 'Fire',
                                  'Grass': 'Grass',
                                  'Water': 'Water',
                                  'Psychic': 'Psychic',
-                                 'Dark': 'Dark'}
+                                 'Dark': 'Dark',
+                                 'Normal': None}
 
     def set_moves(self, move, power, move_type):
         self.move_set[move] = (power, move_type)
@@ -47,12 +50,10 @@ class Creature:
         dmg_dealt = int((power * self.stats['attack']) ** (1/3))
 
         if creature_type == self.super_effective_charts[type]:
-            print("It's super effective!")
             dmg_dealt = dmg_dealt * 2
             self.hp -= int(dmg_dealt)
 
         elif creature_type == self.not_effective_charts[type] or creature_type == self.same_type_charts[type]:
-            print("Not very effective...")
             dmg_dealt = dmg_dealt / 2
             self.hp -= int(dmg_dealt)
 
@@ -60,6 +61,28 @@ class Creature:
             self.hp -= dmg_dealt
 
         return int(dmg_dealt)
+
+    def get_effectiveness(self, type, creature_type):
+        # effectiveness:
+        # 0 = Normal
+        # 1 = Super effective
+        # 2 = Not very effective
+
+        effectiveness = 0
+
+        if creature_type == self.super_effective_charts[type]:
+            print("It's super effective!")
+            effectiveness = 1
+
+        elif creature_type == self.not_effective_charts[type] or creature_type == self.same_type_charts[type]:
+            print("Not very effective...")
+            effectiveness = 2
+
+        else:
+            effectiveness = 0
+
+        return effectiveness
+
 
 
 class Wild_Creature(Creature):

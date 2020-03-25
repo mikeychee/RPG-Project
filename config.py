@@ -13,8 +13,8 @@ screen_height = 480
 screen_width = 640
 
 fps_Counter = pygame.font.Font("fonts/proxima_nova.ttf", 20)
-game_messages = pygame.font.Font("fonts/Connection.otf", 30)
-game_messages_small = pygame.font.Font("fonts/Connection.otf", 20)
+game_messages = pygame.font.Font("fonts/pokemon_fire_red.ttf", 50)
+game_messages_small = pygame.font.Font("fonts/pokemon_fire_red.ttf", 30)
 
 grass01 = pygame.image.load("textures/grass01.png")
 tallgrass01 = pygame.image.load("textures/tallgrass01.png")
@@ -23,6 +23,8 @@ tree01 = pygame.image.load("textures/tree01.png")
 NPC02 = pygame.image.load("textures/NPC02.png")
 text_background = pygame.image.load("textures/Text Background.png")
 battle_background = pygame.image.load("textures/Battlebackground_grass.png")
+button_template = pygame.image.load("textures/button_template.png")
+button_template_H = pygame.image.load("textures/button_template_H.png")
 
 fight_button = pygame.image.load("textures/fight_button.png")
 fight_button_H = pygame.image.load("textures/fight_button hover.png")
