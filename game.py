@@ -418,7 +418,9 @@ class Game:
         current_selection = 0
         # game code
         while not ended:
-
+            #TODO: Health bars
+            # draw a rect that uses the health bar percentage as the width
+            # so that when the health goes down, the bar will be shorter as the rect width would be shorter
             mouse = pygame.mouse.get_pos()
             for event in pygame.event.get():
                 #print(event)
@@ -544,7 +546,6 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_b:
                         count = 2
-                        current_selection = 0
 
                         if count < len(sequence_texts):
                             self.scene.set_background(config.battle_background, self.scene_surface)
@@ -847,6 +848,7 @@ class Game:
 
                             if battle_count >= len(battle_texts)-1:
                                 count = 2
+                                current_selection = 0
 
                             elif battle_count < 0:
                                 battle_count = 0
